@@ -36,6 +36,7 @@ module "app_node_group" {
   tags   = var.default_tags
 
   eks_cluster_name   = var.node_group.eks_cluster_name
+  ami_type           = var.node_group.ami_type
   node_group_name    = var.node_group.name
   node_role_arn      = var.node_group.node_role_arn
   subnet_ids         = var.node_group.subnet_ids

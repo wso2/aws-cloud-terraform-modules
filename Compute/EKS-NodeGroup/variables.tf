@@ -44,6 +44,7 @@ variable "node_group" {
     desired_size           = number
     max_unavailable        = number
     k8s_version            = string
+    ami_type               = string
     instance_types         = list(string)
   })
 }
