@@ -171,14 +171,14 @@ module "database_security_group_ingress_rules" {
   ingress-rules = concat([
     {
       ip_protocol    = "tcp"
-      from_port      = 3306
-      to_port        = 3306
+      from_port      = 5432
+      to_port        = 5432
       security_group = module.app_security_group.security_group_id
     },
     {
       ip_protocol    = "tcp"
-      from_port      = 3306
-      to_port        = 3306
+      from_port      = 5432
+      to_port        = 5432
       security_group = module.management_security_group.security_group_id
     }
   ], var.database_security_group_ingress_rules)
