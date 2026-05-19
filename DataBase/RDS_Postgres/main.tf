@@ -34,7 +34,7 @@ resource "random_string" "random" {
   special = false
 }
 
-module "mysql_db" {
+module "postgres_db" {
   source                           = "git::https://github.com/wso2/aws-terraform-modules.git//modules/aws/RDS?ref=UnitOfWork"
   project                          = lower(var.project)
   environment                      = lower(var.environment)
@@ -42,8 +42,9 @@ module "mysql_db" {
   application                      = var.application
   tags                             = var.default_tags
   username                         = var.username
-  engine                           = "mysql"
+  engine                           = "postgres"
   engine_version                   = var.engine_version
+  port                             = "5432"
   instance_class                   = var.instance_class
   final_snapshot_identifier_suffix = random_string.random.result
   multi_az                         = var.multi_az
@@ -53,7 +54,7 @@ module "mysql_db" {
   deletion_protection    = var.deletion_protection
 }
 
-module "mysql_db_proxy" {
+module "postgres_db_proxy" {
   count = var.create_db_proxy ? 1 : 0
 
   source                 = "git::https://github.com/wso2/aws-terraform-modules.git//modules/aws/RDS-Proxy?ref=UnitOfWork"
@@ -62,7 +63,7 @@ module "mysql_db_proxy" {
   region                 = var.region
   application            = var.application
   tags                   = var.default_tags
-  engine                 = "MYSQL"
+  engine                 = "POSTGRESQL"
   require_tls            = var.require_tls
   vpc_security_group_ids = var.db_security_group_ids
   vpc_subnets            = var.db_subnet_ids
@@ -70,11 +71,11 @@ module "mysql_db_proxy" {
   auth_list              = var.proxy_auth_list
 }
 
-module "mysql_db_proxy_target" {
+module "postgres_db_proxy_target" {
   count = var.create_db_proxy ? 1 : 0
 
   source                    = "git::https://github.com/wso2/aws-terraform-modules.git//modules/aws/RDS-Proxy-Target-Group?ref=UnitOfWork"
-  db_instance_identifier    = module.mysql_db.db_identifier
-  db_proxy_name             = module.mysql_db_proxy[0].db_proxy_name
-  default_target_group_name = module.mysql_db_proxy[0].default_target_group_name
+  db_instance_identifier    = module.postgres_db.db_identifier
+  db_proxy_name             = module.postgres_db_proxy[0].db_proxy_name
+  default_target_group_name = module.postgres_db_proxy[0].default_target_group_name
 }

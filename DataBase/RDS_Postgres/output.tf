@@ -19,16 +19,16 @@
 # --------------------------------------------------------------------------------------
 
 output "db_instance_endpoint" {
-  value = module.mysql_db.db_instance_address
+  value = module.postgres_db.db_instance_address
 }
 output "db_proxy_endpoint" {
-  value = try(module.mysql_db_proxy[0].db_proxy_endpoint, "No RDS proxy created")
+  value = try(module.postgres_db_proxy[0].db_proxy_endpoint, "No RDS proxy created")
 }
 data "aws_secretsmanager_secret" "rds_root_secret" {
-  arn = module.mysql_db.db_root_id
+  arn = module.postgres_db.db_root_id
 }
 output "db_root_secret_arn" {
-  value = module.mysql_db.db_root_id
+  value = module.postgres_db.db_root_id
 }
 output "rds_root_secret_name" {
   value = data.aws_secretsmanager_secret.rds_root_secret.name
